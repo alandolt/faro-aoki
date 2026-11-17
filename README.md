@@ -21,7 +21,7 @@ Depend on `faro-aoki`; it brings faro along:
 dependencies = ["faro-aoki"]
 
 [tool.uv.sources]
-faro-aoki = { git = "https://github.com/pertzlab/faro-aoki.git", branch = "main" }
+faro-aoki = { git = "https://github.com/alandolt/faro-aoki.git", branch = "main" }
 ```
 
 ```python
@@ -94,7 +94,7 @@ the rest. `tests/test_package.py` checks this for both configs.
 ## Development
 
 ```bash
-git clone https://github.com/pertzlab/faro-aoki.git
+git clone https://github.com/alandolt/faro-aoki.git
 cd faro-aoki
 uv sync                      # with pytest and pre-commit (dev group)
 uv run pytest

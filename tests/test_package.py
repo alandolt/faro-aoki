@@ -77,8 +77,17 @@ def test_napari_controls_match_the_config(name):
     ]
     devices = {f[1] for f in lines if f[0] == "Device" and len(f) > 1}
     groups = {f[1] for f in lines if f[0] == "ConfigGroup" and len(f) > 1}
+    # Set in the cfg, or else given by Micro-Manager to the loaded autofocus
+    # device (adapter name "Autofocus" on the IX83, "PFS" on the Ti2).
     autofocus = next(
         (f[3] for f in lines if f[:3] == ["Property", "Core", "AutoFocus"]), ""
+    ) or next(
+        (
+            f[1]
+            for f in lines
+            if f[0] == "Device" and len(f) > 3 and f[3] in ("Autofocus", "PFS")
+        ),
+        "",
     )
 
     for entry in cls.NAPARI_CONTROLS:

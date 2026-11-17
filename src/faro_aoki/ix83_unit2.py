@@ -18,7 +18,11 @@ from importlib.resources import files
 import pymmcore_plus
 from pymmcore_plus.mda import MDAEngine
 
-from faro.microscope.pymmcore import ConfigGroupControl, PyMMCoreMicroscope
+from faro.microscope.pymmcore import (
+    ConfigGroupControl,
+    ContinuousFocusControl,
+    PyMMCoreMicroscope,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -56,9 +60,9 @@ class IX83Unit2(PyMMCoreMicroscope):
     CHANNEL_GROUP = "Channel"
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
-    # "Autofocus" device; the cfg does not set it as the core's autofocus
-    # device, so it is switched through its ZDCEnabled property rather than a
-    # ContinuousFocusControl.
+    # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no
+    # Core,AutoFocus line; Micro-Manager gives the core's autofocus role to
+    # that device when the cfg is loaded.
     NAPARI_CONTROLS = [
         "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
@@ -71,7 +75,7 @@ class IX83Unit2(PyMMCoreMicroscope):
         "Camera",
         ConfigGroupControl("Binning"),
         "Focus",
-        ("Autofocus", "ZDCEnabled", "ZDC"),
+        ContinuousFocusControl("ZDC"),
     ]
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False

@@ -55,8 +55,10 @@ class IX83Unit2(PyMMCoreMicroscope):
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Lumencor2.cfg")
     CHANNEL_GROUP = "Channel"
     # The "Illumination Control" dock of faro-napari, top to bottom (see
-    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The cfg sets no
-    # autofocus device (no ZDC), so there is no continuous focus toggle.
+    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
+    # "Autofocus" device; the cfg does not set it as the core's autofocus
+    # device, so it is switched through its ZDCEnabled property rather than a
+    # ContinuousFocusControl.
     NAPARI_CONTROLS = [
         "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
@@ -68,6 +70,8 @@ class IX83Unit2(PyMMCoreMicroscope):
         (HALOGEN, "Brightness", "Halogen"),
         "Camera",
         ConfigGroupControl("Binning"),
+        "Focus",
+        ("Autofocus", "ZDCEnabled", "ZDC"),
     ]
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False

@@ -12,7 +12,11 @@ from importlib.resources import files
 
 import pymmcore_plus
 
-from faro.microscope.pymmcore import PyMMCoreMicroscope
+from faro.microscope.pymmcore import (
+    ConfigGroupControl,
+    ContinuousFocusControl,
+    PyMMCoreMicroscope,
+)
 
 
 class Ti2E(PyMMCoreMicroscope):
@@ -23,11 +27,16 @@ class Ti2E(PyMMCoreMicroscope):
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False
 
-    # Shown in faro-napari's "Illumination Control" widget as
-    # (device, property, label).
-    LIGHT_PROPERTIES = [
+    # The "Illumination Control" dock of faro-napari, top to bottom (see
+    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types).
+    NAPARI_CONTROLS = [
+        "Light",
         ("LED1 Device", "L.15 Intensity", "LedEpi"),
         ("DiaLamp", "Intensity", "DiaLamp"),
+        "Camera",
+        ConfigGroupControl("Binning"),
+        "Focus",
+        ContinuousFocusControl("PFS"),
     ]
 
     # Fluorescence presets of the Channel and Channel_w_condenser groups. The

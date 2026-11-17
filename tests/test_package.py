@@ -8,6 +8,11 @@ from pathlib import Path
 
 import pytest
 
+from faro.microscope.pymmcore import (
+    ConfigGroupControl,
+    ContinuousFocusControl,
+    DeviceControl,
+)
 from faro.microscope.registry import available_scopes, load_scope_class
 
 SCOPES = {
@@ -54,3 +59,36 @@ def test_presets_of_a_group_set_the_same_properties(name):
                 f"{sorted(presets[preset] ^ presets[first])} differently "
                 f"from {group}/{first}"
             )
+
+
+@pytest.mark.parametrize("name", sorted(SCOPES))
+def test_napari_controls_match_the_config(name):
+    """Devices, groups and the autofocus of NAPARI_CONTROLS exist in the cfg.
+
+    Property names come from the device adapters at runtime, so only the
+    device of a property entry is checked here.
+    """
+    cls = load_scope_class(name)
+    lines = [
+        line.split(",")
+        for line in Path(cls.MICROMANAGER_CONFIG)
+        .read_text(encoding="latin-1")
+        .splitlines()
+    ]
+    devices = {f[1] for f in lines if f[0] == "Device" and len(f) > 1}
+    groups = {f[1] for f in lines if f[0] == "ConfigGroup" and len(f) > 1}
+    autofocus = next(
+        (f[3] for f in lines if f[:3] == ["Property", "Core", "AutoFocus"]), ""
+    )
+
+    for entry in cls.NAPARI_CONTROLS:
+        if isinstance(entry, str):
+            continue
+        if isinstance(entry, ConfigGroupControl):
+            assert entry.group in groups, entry
+        elif isinstance(entry, ContinuousFocusControl):
+            assert autofocus, f"{entry}: the cfg sets no autofocus device"
+        elif isinstance(entry, DeviceControl):
+            assert entry.device in devices, entry
+        else:
+            assert entry[0] in devices, entry

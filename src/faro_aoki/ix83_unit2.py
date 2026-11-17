@@ -18,7 +18,7 @@ from importlib.resources import files
 import pymmcore_plus
 from pymmcore_plus.mda import MDAEngine
 
-from faro.microscope.pymmcore import PyMMCoreMicroscope
+from faro.microscope.pymmcore import ConfigGroupControl, PyMMCoreMicroscope
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +54,11 @@ class IX83Unit2(PyMMCoreMicroscope):
     # illumination settings by tools/ix83_unit2/ils_to_mm_presets.py.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Lumencor2.cfg")
     CHANNEL_GROUP = "Channel"
-    # Shown in faro-napari's "Illumination Control" widget as
-    # (device, property, label).
-    LIGHT_PROPERTIES = [
+    # The "Illumination Control" dock of faro-napari, top to bottom (see
+    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The cfg sets no
+    # autofocus device (no ZDC), so there is no continuous focus toggle.
+    NAPARI_CONTROLS = [
+        "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
         ("Spectra", "Blue_Level", "Blue"),
         ("Spectra", "Cyan_Level", "Cyan"),
@@ -64,6 +66,8 @@ class IX83Unit2(PyMMCoreMicroscope):
         ("Spectra", "Green_Level", "Green"),
         ("Spectra", "Red_Level", "Red"),
         (HALOGEN, "Brightness", "Halogen"),
+        "Camera",
+        ConfigGroupControl("Binning"),
     ]
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False

@@ -11,6 +11,8 @@ yet. It switches back to pertzlab/faro once that support is merged there.
 |------|-------|----------|--------|
 | `ix83unit2` | `faro_aoki.ix83_unit2.IX83Unit2` | Olympus IX83 (unit no. 2), Lumencor Spectra X, Teledyne Photometrics Prime Sigma (PVCAM) | `IX83Lumencor2.cfg` |
 | `ti2e` | `faro_aoki.ti2e.Ti2E` | Nikon Ti2-E, X-Cite XT600, Hamamatsu DCAM camera; no DMD | `NikonTi2e.cfg` |
+| `ix83csu` | `faro_aoki.ix83_csu.IX83CSU` | Olympus IX83 + Yokogawa CSU-W1, OBIS lasers (manual) with NI-DAQ shutters, Hamamatsu Orca Fusion BT; Mightex Polygon DMD shows all pixels on; whole-FOV stimulation through the `DMD` preset or a CSU laser preset | `ix83csu.cfg` |
+| `ix83csudmd` | `faro_aoki.ix83_csu.IX83CSUDMD` | as `ix83csu`, with patterned DMD stimulation (`calibrate_dmd()`) | `ix83csu.cfg` |
 
 The Micro-Manager configs ship inside the package
 ([`src/faro_aoki/configs/`](src/faro_aoki/configs/)), so a class finds its

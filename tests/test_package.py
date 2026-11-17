@@ -18,6 +18,8 @@ from faro.microscope.registry import available_scopes, load_scope_class
 SCOPES = {
     "ix83unit2": "faro_aoki.ix83_unit2:IX83Unit2",
     "ti2e": "faro_aoki.ti2e:Ti2E",
+    "ix83csu": "faro_aoki.ix83_csu:IX83CSU",
+    "ix83csudmd": "faro_aoki.ix83_csu:IX83CSUDMD",
 }
 
 

@@ -16,7 +16,7 @@ from faro.microscope.pymmcore import (
 from faro.microscope.registry import available_scopes, load_scope_class
 
 SCOPES = {
-    "ix83_unit2": "faro_aoki.ix83_unit2:IX83Unit2",
+    "ix83unit2": "faro_aoki.ix83_unit2:IX83Unit2",
     "ti2e": "faro_aoki.ti2e:Ti2E",
 }
 
@@ -26,6 +26,12 @@ def test_scopes_are_registered():
     for name, target in SCOPES.items():
         assert registered.get(name) == target
         assert available_scopes()[name] == target
+
+
+def test_entry_point_names_are_the_class_names_in_lower_case():
+    for ep in entry_points(group="faro.microscopes"):
+        if ep.value.startswith("faro_aoki."):
+            assert ep.name == ep.value.partition(":")[2].lower(), ep
 
 
 @pytest.mark.parametrize("name", sorted(SCOPES))

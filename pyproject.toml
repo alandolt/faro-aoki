@@ -11,8 +11,10 @@ dependencies = [
 ]
 
 [project.entry-points."faro.microscopes"]
-# `faro-napari ix83_unit2`, `pytest --scope ti2e`, ...
-ix83_unit2 = "faro_aoki.ix83_unit2:IX83Unit2"
+# Name = class name in lower case (checked by tests/test_package.py).
+# `faro-napari ix83unit2`, `pytest --scope ti2e`, or the full path:
+# `faro-napari faro_aoki.ti2e:Ti2E` (works without an entry point).
+ix83unit2 = "faro_aoki.ix83_unit2:IX83Unit2"
 ti2e = "faro_aoki.ti2e:Ti2E"
 
 [dependency-groups]

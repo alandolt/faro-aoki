@@ -9,7 +9,7 @@ yet. It switches back to pertzlab/faro once that support is merged there.
 
 | Name | Class | Hardware | Config |
 |------|-------|----------|--------|
-| `ix83_unit2` | `faro_aoki.ix83_unit2.IX83Unit2` | Olympus IX83 (unit no. 2), Lumencor Spectra X, Teledyne Photometrics Prime Sigma (PVCAM) | `IX83Lumencor2.cfg` |
+| `ix83unit2` | `faro_aoki.ix83_unit2.IX83Unit2` | Olympus IX83 (unit no. 2), Lumencor Spectra X, Teledyne Photometrics Prime Sigma (PVCAM) | `IX83Lumencor2.cfg` |
 | `ti2e` | `faro_aoki.ti2e.Ti2E` | Nikon Ti2-E, X-Cite XT600, Hamamatsu DCAM camera; no DMD | `NikonTi2e.cfg` |
 
 The Micro-Manager configs ship inside the package
@@ -38,7 +38,7 @@ mic = IX83Unit2()
 The GUI finds the scopes by name:
 
 ```bash
-uv run faro-napari ix83_unit2
+uv run faro-napari ix83unit2
 uv run faro-napari ti2e
 ```
 

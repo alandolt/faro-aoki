@@ -2,6 +2,11 @@
 
 Aoki lab microscopes for [faro](https://github.com/pertzlab/faro).
 
+faro-aoki takes faro from [alandolt/faro](https://github.com/alandolt/faro)
+`main`, a fork of pertzlab/faro with the lab-package support (scope entry
+points, `faro.testing`, `NAPARI_CONTROLS`) that pertzlab/faro does not have
+yet. It switches back to pertzlab/faro once that support is merged there.
+
 | Name | Class | Hardware | Config |
 |------|-------|----------|--------|
 | `ix83_unit2` | `faro_aoki.ix83_unit2.IX83Unit2` | Olympus IX83 (unit no. 2), Lumencor Spectra X, Teledyne Photometrics Prime Sigma (PVCAM) | `IX83Lumencor2.cfg` |
@@ -55,7 +60,7 @@ code/
 
 ```toml
 [tool.uv]
-# faro-aoki pins faro to git main; this replaces that pin with the clone.
+# faro-aoki pins faro to alandolt/faro main; this replaces that pin with the clone.
 # It replaces every faro requirement, so list the faro extras you need here,
 # e.g. ["faro[cellpose]"].
 override-dependencies = ["faro"]
@@ -68,7 +73,8 @@ faro-aoki = { path = "../../faro-aoki", editable = true }
 Without the override, uv stops with "conflicting URLs for package `faro`".
 With `override-dependencies = ["faro"]`, faro extras given in `dependencies`
 (e.g. `faro[cellpose]`) are dropped silently, so put them in the override.
-The same holds for any faro source other than git main, e.g. a `rev` pin.
+The same holds for any faro source other than alandolt/faro main, e.g. a `rev`
+pin or pertzlab/faro.
 After adding or renaming a scope in `pyproject.toml`, run `uv sync` (a running
 Jupyter kernel needs a restart) so the new name is registered.
 

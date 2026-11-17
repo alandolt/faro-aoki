@@ -31,7 +31,9 @@ default-groups = ["dev"]
 [tool.uv.sources]
 # faro's own sources (napari-micromanager main, the virtual microscope, the
 # CUDA torch index) carry over from faro.
-faro = { git = "https://github.com/pertzlab/faro.git", branch = "main" }
+# alandolt/faro main has the lab-package support (scope entry points,
+# faro.testing, NAPARI_CONTROLS) that pertzlab/faro main does not have yet.
+faro = { git = "https://github.com/alandolt/faro.git", branch = "main" }
 # To work on faro at the same time, clone it next to this repository:
 # faro = { path = "../faro", editable = true }
 

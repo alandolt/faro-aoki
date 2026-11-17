@@ -1,0 +1,46 @@
+[project]
+name = "faro-aoki"
+version = "0.1.0"
+description = "Aoki lab microscopes (Olympus IX83 unit 2, Nikon Ti2-E) for faro"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "faro",
+]
+
+[project.entry-points."faro.microscopes"]
+# `faro-napari ix83_unit2`, `pytest --scope ti2e`, ...
+ix83_unit2 = "faro_aoki.ix83_unit2:IX83Unit2"
+ti2e = "faro_aoki.ti2e:Ti2E"
+
+[dependency-groups]
+# Installed by default in this repository (uv sync). Projects that depend on
+# faro-aoki never get dependency groups.
+dev = [
+    "pytest",
+    "pre-commit",
+]
+# Cellpose for segmenting hardware tests and examples: uv sync --group cellpose
+cellpose = ["faro[cellpose]"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.uv.sources]
+# faro's own sources (napari-micromanager main, the virtual microscope, the
+# CUDA torch index) carry over from faro.
+faro = { git = "https://github.com/pertzlab/faro.git", branch = "main" }
+# To work on faro at the same time, clone it next to this repository:
+# faro = { path = "../faro", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

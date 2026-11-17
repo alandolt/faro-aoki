@@ -1,0 +1,3 @@
+# Keep Micro-Manager and MetaMorph files byte for byte.
+*.cfg -text
+*.ILS binary

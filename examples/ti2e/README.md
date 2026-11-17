@@ -1,0 +1,23 @@
+# Examples for the Nikon Ti2-E
+
+The Pertzlab example experiments, adapted to the Ti2-E of the Aoki lab
+(`faro_aoki.ti2e.Ti2E`, config `NikonTi2e.cfg`).
+
+| Folder | What it shows | Needs the Ti2-E |
+|--------|---------------|-----------------|
+| `01_demo_microscope/` | A first timelapse at the current stage position: segmentation and tracking, no stimulation. | yes |
+| `03_demo_writer_implementation/` | The same short experiment with `TiffWriter`, `OmeZarrWriter` and `OmeZarrWriterPlate`, and the conversion of a TIFF run to OME-Zarr. | yes, except the conversion |
+| `11_erk_experiments_full_fov_stim/` | ERK-KTR experiments with whole-FOV blue light, with the RTMSequence and the df_acquire API. | yes |
+| `90_reanalysis/` | Re-processing a finished run offline with new tracking or features. | no |
+
+## Before a run
+
+- Close NIS-Elements and any other Micro-Manager: a device can be opened by one program only.
+- The notebooks open napari with napari-micromanager themselves. Do not run `faro-napari ti2e` at the same time.
+- Positions built from the current stage position carry no `z`, so faro never moves the focus drive.
+
+## Ti2-E specifics
+
+- **No DMD.** Stimulation is whole-FOV only (`StimWholeFOV`), through a fluorescence preset such as `GFP` for blue light.
+- **One LED for all fluorescence presets.** The X-Cite XT600 (`LED1 Device`) is the shutter of every fluorescence preset. `Ti2E` maps them all to its intensity property, so a `PowerChannel(config=..., power=...)` sets the LED in percent. DIC and QPI use the DiaLamp and take no power.
+- **Preset mapping from the Pertzlab scopes:** `miRFP` is `iRFP`, `mScarlet3` is `RFP`, `CyanStim` is `GFP`, `mCitrine` is `YFP_Custom`.

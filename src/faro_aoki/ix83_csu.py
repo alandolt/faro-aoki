@@ -78,10 +78,12 @@ class IX83CSU(PyMMCoreMicroscope):
         config: str | None = None,
     ):
         super().__init__()
-        self.micromanager_path = micromanager_path or self.MICROMANAGER_PATH
+        # By hand, else MICROMANAGER_PATH, else the class's folder
+        # (PyMMCoreMicroscope.micromanager_dir).
+        self.micromanager_path = self.micromanager_dir(micromanager_path)
         self.micromanager_config = config or self.MICROMANAGER_CONFIG
         pymmcore_plus.use_micromanager(self.micromanager_path)
-        self.mmc = pymmcore_plus.CMMCorePlus()
+        self.mmc = pymmcore_plus.CMMCorePlus(self.micromanager_path)
         self.slm_dev = None
         self.slm_width = None
         self.slm_height = None

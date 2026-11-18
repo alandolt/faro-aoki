@@ -49,6 +49,10 @@ class IX83CSU(PyMMCoreMicroscope):
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False
 
+    # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
+    # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
+    NAPARI_WIDGETS = ["Stage Map"]
+
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The halogen
     # is set to one brightness per experiment; BF and DIC differ by exposure

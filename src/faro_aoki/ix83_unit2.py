@@ -58,6 +58,10 @@ class IX83Unit2(PyMMCoreMicroscope):
     # illumination settings by tools/ix83_unit2/ils_to_mm_presets.py.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Lumencor2.cfg")
     CHANNEL_GROUP = "Channel"
+    # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
+    # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
+    NAPARI_WIDGETS = ["Stage Map"]
+
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
     # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no

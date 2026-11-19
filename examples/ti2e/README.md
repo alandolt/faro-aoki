@@ -5,9 +5,9 @@ The Pertzlab example experiments, adapted to the Ti2-E of the Aoki lab
 
 | Folder | What it shows | Needs the Ti2-E |
 |--------|---------------|-----------------|
-| `01_demo_microscope/` | A first timelapse at the current stage position: segmentation and tracking, no stimulation. | yes |
+| `01_simple_acquisition/` | A first timelapse at one stage position, with napari-micromanager for live view and stage control: Cellpose (or Otsu) segmentation and tracking, no stimulation. | yes |
 | `03_demo_writer_implementation/` | The same short experiment with `TiffWriter`, `OmeZarrWriter` and `OmeZarrWriterPlate`, and the conversion of a TIFF run to OME-Zarr. | yes, except the conversion |
-| `11_erk_experiments_full_fov_stim/` | ERK-KTR experiments with whole-FOV blue light, with the RTMSequence and the df_acquire API. | yes |
+| `11_erk_experiments_full_fov_stim/` | ERK-KTR experiments with whole-FOV blue light, built with `RTMSequence`. | yes |
 | `90_reanalysis/` | Re-processing a finished run offline with new tracking or features. | no |
 
 ## Before a run

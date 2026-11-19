@@ -16,31 +16,28 @@ All presets share the X-Cite XT600 LED. The `power` of a `PowerChannel` sets the
 LED intensity in percent. Exposures and powers in the notebooks are the Jungfrau
 values; tune them for the XT600.
 
-Segmentation uses Cellpose v4: `uv sync --extra cellpose`. Each notebook names
+Segmentation uses Cellpose v4: `uv sync --group cellpose`. The notebook names
 `OtsuSegmentator` as the alternative without Cellpose.
 
-## Notebooks
+## Notebook
 
-### `stim_rtmsequence.ipynb`: RTMSequence API (recommended)
+### `stim_rtmsequence.ipynb`
 
 A multi-phase experiment declared with `RTMSequence` objects (time plan,
-channels, stim frames, ref frames) and joined with `combine`.
+channels, stim frames, ref frames) and joined with `combine`. The `WRITER`
+setting picks `"omezarr"` (one OME-Zarr store) or `"tiff"` (one TIFF per
+frame).
 
-### `stim_dfacquire.ipynb`: df_acquire API
+## GPU
 
-The same kind of experiment with the legacy `df_acquire` DataFrame API:
-`generate_df_acquire()` and `apply_stim_treatments_to_df_acquire()`, converted
-with `df_to_events()`. The second phase runs with `continue_experiment()` on the
-same controller.
+Cellpose (and convpaint) run on the GPU only if torch sees CUDA:
 
-### `stim_ramp_dfacquire.ipynb`: drug test with pre-exposure (df_acquire API)
+```bash
+uv run python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+```
 
-Three FOV groups with different treatments, each split into a pre-drug and a
-post-drug half, with manual pipetting in between. Shows `StimTreatment` with
-ramped exposures and `continue_experiment()` across phases.
-
-Every notebook has a `WRITER` setting: `"omezarr"` (one OME-Zarr store) or
-`"tiff"` (one TIFF per frame). The ramp notebook defaults to `"tiff"`: its FOV
-groups 2 and 3 join the run later, and the `OmeZarrWriter` of this faro version
-cannot add FOVs to a running store (fixed on the branch
-`fix/omezarr-grow-positions`, not merged yet).
+The lock installs the CUDA 13.0 build of torch (`+cu130`), which needs an
+NVIDIA driver >= 580.65 (`nvidia-smi` shows the version). With an older driver
+`is_available()` is `False` and both fall back to the CPU without an error.
+Cellpose-SAM on the CPU is very slow and needs a lot of memory on a full camera
+frame; the kernel can die without a message.

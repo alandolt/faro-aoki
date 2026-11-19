@@ -6,11 +6,14 @@ The Pertzlab example experiments, adapted to the Ti2-E of the Aoki lab
 | Folder | What it shows | Needs the Ti2-E |
 |--------|---------------|-----------------|
 | `01_simple_acquisition/` | A first timelapse at one stage position, with napari-micromanager for live view and stage control: Cellpose (or Otsu) segmentation and tracking, no stimulation. | yes |
+| `02_multi_position/` | The same timelapse at several fields of view, picked in the MDA widget of napari-micromanager and read with `generate_fov_positions`. | yes |
 | `03_demo_writer_implementation/` | The same short experiment with `TiffWriter`, `OmeZarrWriter` and `OmeZarrWriterPlate`, and the conversion of a TIFF run to OME-Zarr. | yes, except the conversion |
-| `11_erk_experiments_full_fov_stim/` | ERK-KTR experiments with whole-FOV blue light, built with `RTMSequence`. | yes |
-| `90_reanalysis/` | Re-processing a finished run offline with new tracking or features. | no |
+| `04_erk_experiments_full_fov_stim/` | ERK-KTR experiments with whole-FOV blue light, built with `RTMSequence`. | yes |
+| `05_reanalysis/` | Re-processing a finished run offline with new tracking or features. | no |
 
 ## Before a run
+
+- Every notebook writes its data into a `data/` folder next to it (ignored by git).
 
 - Close NIS-Elements and any other Micro-Manager: a device can be opened by one program only.
 - The notebooks open napari with napari-micromanager themselves. Do not run `faro-napari ti2e` at the same time.

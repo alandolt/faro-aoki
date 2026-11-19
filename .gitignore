@@ -9,3 +9,6 @@ dist/
 .vscode/
 .claude/
 uv.lock
+
+# Data written by the example notebooks
+examples/**/data/

@@ -23,4 +23,5 @@ The Pertzlab example experiments, adapted to the Ti2-E of the Aoki lab
 
 - **No DMD.** Stimulation is whole-FOV only (`StimWholeFOV`), through a fluorescence preset such as `GFP` for blue light.
 - **One LED for all fluorescence presets.** The X-Cite XT600 (`LED1 Device`) is the shutter of every fluorescence preset. `Ti2E` maps them all to its intensity property, so a `PowerChannel(config=..., power=...)` sets the LED in percent. DIC and QPI use the DiaLamp and take no power.
+- **Hardware trigger config is not ready.** `NikonTi2e_hwtrigger.cfg` (camera output trigger drives the XT600) still has open problems; see the notes at the top of that file. Use `NikonTi2e.cfg`.
 - **Preset mapping from the Pertzlab scopes:** `miRFP` is `iRFP`, `mScarlet3` is `RFP`, `CyanStim` is `GFP`, `mCitrine` is `YFP_Custom`.

@@ -20,7 +20,7 @@ from faro.microscope.pymmcore import (
 
 
 class Ti2E(PyMMCoreMicroscope):
-    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0"
+    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0_api75"
     # Shipped with the package.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "NikonTi2e.cfg")
     CHANNEL_GROUP = "Channel"

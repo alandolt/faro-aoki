@@ -17,7 +17,8 @@ yet. It switches back to pertzlab/faro once that support is merged there.
 The Micro-Manager configs ship inside the package
 ([`src/faro_aoki/configs/`](src/faro_aoki/configs/)), so a class finds its
 config on every PC. Micro-Manager itself is expected at
-`C:\Program Files\Micro-Manager-2.0`.
+`C:\Program Files\Micro-Manager-2.0`, on the Ti2-E at
+`C:\Program Files\Micro-Manager-2.0_api75`.
 
 Mightex Polygon400 (`ix83csu`): `MT_Polygon400_SDK.dll` goes into the
 Micro-Manager folder. The SDK also needs the `MT_Polygon400_SDK` folder from

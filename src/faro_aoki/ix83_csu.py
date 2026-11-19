@@ -14,6 +14,19 @@ not ``PowerChannel``.
 DMD: a CoolLED lights the Polygon. How it is switched (for example by a camera
 timing output) is still open.
 
+Mightex Polygon400 SDK: ``MT_Polygon400_SDK.dll`` must be in the Micro-Manager
+folder. The SDK also needs the ``MT_Polygon400_SDK`` folder (from the PolyScan2
+installer, it holds one ``<device>.dcg`` file per Polygon) in the current
+working directory: it looks there when its DLL is loaded and creates an empty
+folder if missing. Without the ``.dcg`` file, ``MTPLG_InitDevice`` returns -3
+and the adapter fails with "Unable to communicate with the device" (35). The
+Micro-Manager GUI runs in its own folder, so it finds
+``C:\\Program Files\\Micro-Manager-2.0\\MT_Polygon400_SDK\\``; faro does not.
+Put the folder in both places: the Micro-Manager folder (for the GUI) and the
+folder faro is started from. Tested on the microscope
+with the offline Windows 7 bundle: copying ``MT_Polygon400_SDK`` into
+``C:\\faro-aoki-w7`` (the working directory there) makes the Polygon work.
+
 Two classes share ``ix83csu.cfg`` (the DMD is always connected):
 
 - ``IX83CSU``: the DMD shows all pixels on and is not calibrated. Whole-FOV
@@ -42,7 +55,7 @@ HALOGEN = "TransmittedIllumination 2"
 class IX83CSU(PyMMCoreMicroscope):
     """IX83 CSU-W1; the DMD shows all pixels on (whole-FOV stimulation)."""
 
-    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0_api75"
+    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0"
     # Shipped with the package.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "ix83csu.cfg")
     CHANNEL_GROUP = "Channel"

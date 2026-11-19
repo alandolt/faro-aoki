@@ -19,6 +19,14 @@ The Micro-Manager configs ship inside the package
 config on every PC. Micro-Manager itself is expected at
 `C:\Program Files\Micro-Manager-2.0`.
 
+Mightex Polygon400 (`ix83csu`): `MT_Polygon400_SDK.dll` goes into the
+Micro-Manager folder. The SDK also needs the `MT_Polygon400_SDK` folder from
+the PolyScan2 installer (it holds the `<device>.dcg` file of the Polygon) in
+the working directory. Put the folder in both places: the Micro-Manager folder
+(for the GUI) and the folder faro is started from, for the offline bundle
+`C:\faro-aoki-w7\MT_Polygon400_SDK` (tested on the microscope). Without it the device fails with "Unable to communicate with the
+device" (error 35).
+
 ## Use in an experiment
 
 Depend on `faro-aoki`; it brings faro along:

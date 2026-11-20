@@ -91,8 +91,8 @@ Jupyter kernel needs a restart) so the new name is registered.
 
 ## Examples
 
-[`examples/ti2e/`](examples/ti2e/) has the faro example experiments adapted
-to the Ti2-E.
+[`examples/ti2e/`](examples/ti2e/) and [`examples/ix83unit2/`](examples/ix83unit2/)
+have the faro example experiments adapted to the Ti2-E and the IX83 unit 2.
 
 ## IX83 config
 

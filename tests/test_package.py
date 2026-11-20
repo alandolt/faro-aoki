@@ -109,3 +109,20 @@ def test_napari_controls_match_the_config(name):
             assert entry.device in devices, entry
         else:
             assert entry[0] in devices, entry
+
+
+def test_config_error_in_the_system_code_page_is_readable():
+    """A cp932 Windows message in an MMCore error is raised as text."""
+    import sys
+
+    from faro_aoki._config import load_system_configuration
+
+    encoding = "mbcs" if sys.platform == "win32" else "latin-1"
+    raw = 'Failed to load device adapter "X" [ Kein Modul ]'.encode(encoding)
+
+    class Core:
+        def loadSystemConfiguration(self, config):
+            raise UnicodeDecodeError("utf-8", raw, 0, 1, "invalid start byte")
+
+    with pytest.raises(RuntimeError, match="Kein Modul"):
+        load_system_configuration(Core(), "x.cfg")

@@ -23,6 +23,7 @@ from faro.microscope.pymmcore import (
     ContinuousFocusControl,
     PyMMCoreMicroscope,
 )
+from faro_aoki._config import load_system_configuration
 
 logger = logging.getLogger(__name__)
 
@@ -53,10 +54,10 @@ class IX83Unit2MDAEngine(MDAEngine):
 
 
 class IX83Unit2(PyMMCoreMicroscope):
-    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0"
+    MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0_api75"
     # Shipped with the package. Its presets are generated from MetaMorph's
     # illumination settings by tools/ix83_unit2/ils_to_mm_presets.py.
-    MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Lumencor2.cfg")
+    MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Unit2.cfg")
     CHANNEL_GROUP = "Channel"
     # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
     # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
@@ -164,7 +165,7 @@ class IX83Unit2(PyMMCoreMicroscope):
 
     def init_scope(self):
         """Load the config, apply startup, binning and ROI, set the channel group."""
-        self.mmc.loadSystemConfiguration(self.micromanager_config)
+        load_system_configuration(self.mmc, self.micromanager_config)
         self.mmc.setConfig("System", "Startup")
         # Pin camera binning before set_roi(): MM camera drivers reset
         # the ROI on a binning change, so binning must come first.

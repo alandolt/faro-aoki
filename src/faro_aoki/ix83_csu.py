@@ -47,6 +47,7 @@ from faro.microscope.pymmcore import (
     ContinuousFocusControl,
     PyMMCoreMicroscope,
 )
+from faro_aoki._config import load_system_configuration
 
 # Halogen lamp of the transmitted light path (DIA2), Brightness 0-255.
 HALOGEN = "TransmittedIllumination 2"
@@ -104,7 +105,7 @@ class IX83CSU(PyMMCoreMicroscope):
 
     def init_scope(self):
         """Load the config, apply startup, show all DMD pixels on, set the channel group."""
-        self.mmc.loadSystemConfiguration(self.micromanager_config)
+        load_system_configuration(self.mmc, self.micromanager_config)
         self.mmc.setConfig("System", "Startup")
         self.slm_dev = self.mmc.getSLMDevice()
         if self.slm_dev:

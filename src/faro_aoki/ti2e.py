@@ -17,6 +17,7 @@ from faro.microscope.pymmcore import (
     ContinuousFocusControl,
     PyMMCoreMicroscope,
 )
+from faro_aoki._config import load_system_configuration
 
 
 class Ti2E(PyMMCoreMicroscope):
@@ -78,7 +79,7 @@ class Ti2E(PyMMCoreMicroscope):
 
     def init_scope(self):
         """Load the config, apply the startup preset, set the channel group."""
-        self.mmc.loadSystemConfiguration(self.micromanager_config)
+        load_system_configuration(self.mmc, self.micromanager_config)
         self.mmc.setConfig("System", "Startup")
         self.mmc.setChannelGroup(self.CHANNEL_GROUP)
         self.POWER_PROPERTIES = self._led_power_properties()

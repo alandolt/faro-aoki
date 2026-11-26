@@ -28,7 +28,7 @@ from faro_aoki._config import load_system_configuration
 logger = logging.getLogger(__name__)
 
 # Halogen lamp of the transmitted light path (DIA2).
-HALOGEN = "TransmittedIllumination 2"
+DIALAMP = "TransmittedIllumination 2"
 
 
 class IX83Unit2MDAEngine(MDAEngine):
@@ -55,8 +55,6 @@ class IX83Unit2MDAEngine(MDAEngine):
 
 class IX83Unit2(PyMMCoreMicroscope):
     MICROMANAGER_PATH = "C:\\Program Files\\Micro-Manager-2.0_api75"
-    # Shipped with the package. Its presets are generated from MetaMorph's
-    # illumination settings by tools/ix83_unit2/ils_to_mm_presets.py.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "IX83Unit2.cfg")
     CHANNEL_GROUP = "Channel"
     # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
@@ -67,7 +65,9 @@ class IX83Unit2(PyMMCoreMicroscope):
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
     # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no
     # Core,AutoFocus line; Micro-Manager gives the core's autofocus role to
-    # that device when the cfg is loaded.
+    # that device when the cfg is loaded. The Objective group sets the
+    # objective with its matching condenser DIC prism; the Condenser control
+    # overrides the prism by hand. The Channel presets also set the polarizer.
     NAPARI_CONTROLS = [
         "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
@@ -76,9 +76,13 @@ class IX83Unit2(PyMMCoreMicroscope):
         ("Spectra", "Teal_Level", "Teal"),
         ("Spectra", "Green_Level", "Green"),
         ("Spectra", "Red_Level", "Red"),
-        (HALOGEN, "Brightness", "Halogen"),
+        (DIALAMP, "Brightness", "Halogen"),
+        "Transmitted path",
+        ConfigGroupControl("Objective", "Obj+Condenser"),
+        ("Condenser turret", "Label", "Condenser"),
+        ("Polarizer", "Label", "Polarizer"),
         "Camera",
-        ConfigGroupControl("Binning"),
+        ("Camera-1", "Binning", "Binning"),
         "Focus",
         ContinuousFocusControl("ZDC"),
     ]
@@ -95,7 +99,7 @@ class IX83Unit2(PyMMCoreMicroscope):
     #
     # The Trans_* presets (transmitted light) are left out on purpose: the
     # halogen is set to one Brightness (0-255) at the start of the experiment
-    # (Halogen slider in faro-napari, or mmc.setProperty(HALOGEN, "Brightness",
+    # (Halogen slider in faro-napari, or mmc.setProperty(DIALAMP, "Brightness",
     # ...)) and stays there. BF and DIC differ by exposure time, not lamp
     # power, so the lamp is never changed per frame. A Trans_* channel given a
     # power raises in resolve_power(). The IX83 adapter has no lamp on/off;
@@ -138,8 +142,8 @@ class IX83Unit2(PyMMCoreMicroscope):
         "iRFP_Di02": ("Spectra", "Red_Level"),
         "Photoconversion_UV": ("Spectra", "Violet_Level"),
     }
-    # Preset of the cfg's "Binning" group ("1x1" or "2x2"), set at startup.
-    BINNING = "1x1"
+    # Camera-1 Binning property ("1x1" or "2x2"), set at startup.
+    BINNING = "2x2"
     # ROI applied as-is after binning, no centering recomputation. Off by
     # default (full sensor); set SET_ROI_REQUIRED and the ROI_* values, in
     # binned pixels, to crop.
@@ -169,7 +173,7 @@ class IX83Unit2(PyMMCoreMicroscope):
         self.mmc.setConfig("System", "Startup")
         # Pin camera binning before set_roi(): MM camera drivers reset
         # the ROI on a binning change, so binning must come first.
-        self.mmc.setConfig("Binning", self.BINNING)
+        self.mmc.setProperty("Camera-1", "Binning", self.BINNING)
         if self.SET_ROI_REQUIRED:
             self.set_roi()
         self.mmc.setChannelGroup(self.CHANNEL_GROUP)

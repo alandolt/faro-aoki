@@ -13,7 +13,6 @@ from importlib.resources import files
 import pymmcore_plus
 
 from faro.microscope.pymmcore import (
-    ConfigGroupControl,
     ContinuousFocusControl,
     PyMMCoreMicroscope,
 )
@@ -25,7 +24,7 @@ class Ti2E(PyMMCoreMicroscope):
     # Shipped with the package.
     MICROMANAGER_CONFIG = str(files("faro_aoki") / "configs" / "NikonTi2e.cfg")
     CHANNEL_GROUP = "Channel"
-    USE_AUTOFOCUS_EVENT = False
+    USE_AUTOFOCUS_EVENT = True
     USE_ONLY_PFS = False
 
     # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
@@ -33,13 +32,17 @@ class Ti2E(PyMMCoreMicroscope):
     NAPARI_WIDGETS = ["Stage Map"]
 
     # The "Illumination Control" dock of faro-napari, top to bottom (see
-    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types).
+    # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The condenser
+    # is set once per objective here when the "Channel" group is used: the
+    # "Channel_w_condenser" presets set it themselves.
     NAPARI_CONTROLS = [
         "Light",
         ("LED1 Device", "L.15 Intensity", "LedEpi"),
         ("DiaLamp", "Intensity", "DiaLamp"),
+        "Transmitted path",
+        ("CondenserTurret", "Label", "Condenser"),
         "Camera",
-        ConfigGroupControl("Binning"),
+        ("Camera", "Binning", "Binning"),
         "Focus",
         ContinuousFocusControl("PFS"),
     ]

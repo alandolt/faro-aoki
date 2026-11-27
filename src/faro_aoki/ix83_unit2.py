@@ -101,6 +101,10 @@ class IX83Unit2(PyMMCoreMicroscope):
         ("AutofocusDrive", "Offset", "ZDC offset"),
     ]
     USE_AUTOFOCUS_EVENT = False
+    # Keep the ZDC on for the whole run instead of the MDA widget's hardware
+    # autofocus settings: faro-napari hides them and keeps them off.
+    HIDE_AUTOFOCUS = True
+    NAPARI_INCLUDE_Z_TEXT = "Include Z (uncheck if AF is on)"
     USE_ONLY_PFS = False
 
     # Channel preset -> (device, property) that sets the excitation power.

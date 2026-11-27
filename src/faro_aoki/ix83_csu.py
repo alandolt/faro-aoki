@@ -83,6 +83,7 @@ class IX83CSU(PyMMCoreMicroscope):
         ("CSUW1-Filter Wheel", "Label", "CSU-Filter Wheel"),
         "Camera",
         ConfigGroupControl("Binning"),
+        ("Camera", "ScanMode", "ScanMode (1 sensitive, 3 fast)"),
         "Focus",
         ContinuousFocusControl("ZDC"),
     ]

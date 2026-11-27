@@ -46,6 +46,7 @@ class Ti2E(PyMMCoreMicroscope):
         ("FilterWheel1", "Label", "Filter wheel"),
         "Camera",
         ("Camera", "Binning", "Binning"),
+        ("Camera", "ScanMode", "ScanMode (1 sensitive, 3 fast)"),
         "Focus",
         ContinuousFocusControl("PFS"),
     ]

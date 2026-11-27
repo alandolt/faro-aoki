@@ -70,9 +70,10 @@ class IX83Unit2(PyMMCoreMicroscope):
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
     # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no
     # Core,AutoFocus line; Micro-Manager gives the core's autofocus role to
-    # that device when the cfg is loaded. There is no Objective group: the
-    # objective and the condenser DIC prism are set one by one. The Channel
-    # presets also set the polarizer (2-In for Trans_DIC*, 1-Out for the rest).
+    # that device when the cfg is loaded. There is no Objective group; set
+    # the objective in napari-micromanager and the condenser DIC prism here.
+    # The Channel presets also set the polarizer (2-In for Trans_DIC*, 1-Out
+    # for the rest).
     NAPARI_CONTROLS = [
         "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
@@ -84,7 +85,6 @@ class IX83Unit2(PyMMCoreMicroscope):
         (DIALAMP, "Brightness", "Halogen"),
         PropertyToggle(DIALAMP, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
         "Transmitted path",
-        ("Objective", "Label", "Objective"),
         ("Condenser turret", "Label", "Condenser"),
         ("Polarizer", "Label", "Polarizer"),
         "Filters",
@@ -158,6 +158,11 @@ class IX83Unit2(PyMMCoreMicroscope):
     }
     # Camera-1 Binning property ("1x1" or "2x2"), set at startup.
     BINNING = "2x2"
+    # Camera-1 ClearMode, set at startup. Pre-Exposure clears the sensor
+    # before every frame, so no dark signal builds up between time-lapse
+    # frames. It costs a short clear per frame, which only matters for fast
+    # streaming. Matched to the allowed values without regard to case.
+    CLEAR_MODE = "Pre-Exposure"
     # ROI applied as-is after binning, no centering recomputation. Off by
     # default (full sensor); set SET_ROI_REQUIRED and the ROI_* values, in
     # binned pixels, to crop.
@@ -188,11 +193,27 @@ class IX83Unit2(PyMMCoreMicroscope):
         # Pin camera binning before set_roi(): MM camera drivers reset
         # the ROI on a binning change, so binning must come first.
         self.mmc.setProperty("Camera-1", "Binning", self.BINNING)
+        self.set_clear_mode()
         if self.SET_ROI_REQUIRED:
             self.set_roi()
         self.mmc.setChannelGroup(self.CHANNEL_GROUP)
         self.engine = IX83Unit2MDAEngine(self.mmc)
         self.mmc.mda.set_engine(self.engine)
+
+    def set_clear_mode(self):
+        """Set Camera-1 ClearMode to CLEAR_MODE; warn if it is not allowed."""
+        try:
+            allowed = self.mmc.getAllowedPropertyValues("Camera-1", "ClearMode")
+        except Exception:
+            logger.warning("Camera-1 has no ClearMode property")
+            return
+        for value in allowed:
+            if value.lower() == self.CLEAR_MODE.lower():
+                self.mmc.setProperty("Camera-1", "ClearMode", value)
+                return
+        logger.warning(
+            "ClearMode %r not in the allowed values %s", self.CLEAR_MODE, allowed
+        )
 
     def set_roi(self):
         """Apply the class's ROI_* settings as-is (after binning is set)."""

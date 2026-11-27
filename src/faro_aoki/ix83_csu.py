@@ -43,7 +43,6 @@ import pymmcore_plus
 
 from faro.core.dmd import DMD
 from faro.microscope.pymmcore import (
-    ConfigGroupControl,
     ContinuousFocusControl,
     PropertyToggle,
     PyMMCoreMicroscope,
@@ -51,7 +50,7 @@ from faro.microscope.pymmcore import (
 from faro_aoki._config import load_system_configuration
 
 # Halogen lamp of the transmitted light path (DIA2), Brightness 0-255.
-HALOGEN = "TransmittedIllumination 2"
+DIALAMP = "TransmittedIllumination 2"
 
 
 class IX83CSU(PyMMCoreMicroscope):
@@ -63,6 +62,10 @@ class IX83CSU(PyMMCoreMicroscope):
     CHANNEL_GROUP = "Channel"
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False
+    # Keep the ZDC on for the whole run instead of the MDA widget's hardware
+    # autofocus settings: faro-napari hides them and keeps them off.
+    HIDE_AUTOFOCUS = True
+    NAPARI_INCLUDE_Z_TEXT = "Include Z (uncheck if AF is on)"
 
     # Toolbar buttons of the pertzlab pymmcore-widgets build in faro-napari
     # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
@@ -76,23 +79,35 @@ class IX83CSU(PyMMCoreMicroscope):
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The halogen
     # is set to one brightness per experiment; BF and DIC differ by exposure
-    # time. The ZDC is the "Autofocus" device of the IX83 adapter.
+    # time. The ZDC is the "Autofocus" device of the IX83 adapter. The
+    # "Channel" presets set the polarizer: In for all (DIC is the usual
+    # transmitted image; fluorescence does not care), Out for Trans_BF and
+    # Trans_BF_OptoBlue. The Polarizer row overrides it by hand.
     NAPARI_CONTROLS = [
         "Light",
-        (HALOGEN, "Brightness", "Halogen"),
-        PropertyToggle(HALOGEN, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
+        (DIALAMP, "Brightness", "DIALamp"),
+        PropertyToggle(DIALAMP, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
+        "Transmitted path",
+        ("Condenser turret", "Label", "Condenser"),
+        ("Polarizer", "Label", "Polarizer"),
         "Spinning disk",
-        ConfigGroupControl("CSU"),
+        ("CSUW1-Bright Field", "BrightFieldPort", "Brightfield/Confocal"),
+        ("CSUW1-Drive Speed", "Run", "SpinningDisc On/Off"),
+        ("CSUW1-Drive Speed", "State", "SpinningDisc Speed"),
+        ("CSUW1-Aperture", "State", "CSU Aperture"),
         "Filters",
         ("Dichroic 1", "Label", "Mic-Dichroic 1"),
         ("Dichroic 2", "Label", "Mic-Dichroic 2"),
         ("CSUW1-Dichroic Mirror", "Label", "CSU-Dichroic"),
         ("CSUW1-Filter Wheel", "Label", "CSU-Filter Wheel"),
         "Camera",
-        ConfigGroupControl("Binning"),
+        ("Camera", "Binning", "Binning"),
         ("Camera", "ScanMode", "ScanMode (1 sensitive, 3 fast)"),
-        "Focus",
+        "Autofocus",
         ContinuousFocusControl("ZDC"),
+        ("Autofocus", "LowerLimit", "ZDC lower limit"),
+        ("Autofocus", "UpperLimit", "ZDC upper limit"),
+        ("AutofocusDrive", "Offset", "ZDC offset"),
     ]
 
     # Laser power is set by hand on the OBIS remote, the CoolLED on its own

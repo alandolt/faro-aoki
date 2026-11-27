@@ -12,6 +12,7 @@ from faro.microscope.pymmcore import (
     ConfigGroupControl,
     ContinuousFocusControl,
     DeviceControl,
+    PropertyToggle,
 )
 from faro.microscope.registry import available_scopes, load_scope_class
 
@@ -105,9 +106,10 @@ def test_napari_controls_match_the_config(name):
             assert entry.group in groups, entry
         elif isinstance(entry, ContinuousFocusControl):
             assert autofocus, f"{entry}: the cfg sets no autofocus device"
-        elif isinstance(entry, DeviceControl):
+        elif isinstance(entry, (DeviceControl, PropertyToggle)):
             assert entry.device in devices, entry
         else:
+            assert isinstance(entry, (tuple, list)), f"unknown entry {entry!r}"
             assert entry[0] in devices, entry
 
 

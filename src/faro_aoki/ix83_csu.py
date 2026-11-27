@@ -45,6 +45,7 @@ from faro.core.dmd import DMD
 from faro.microscope.pymmcore import (
     ConfigGroupControl,
     ContinuousFocusControl,
+    PropertyToggle,
     PyMMCoreMicroscope,
 )
 from faro_aoki._config import load_system_configuration
@@ -67,6 +68,11 @@ class IX83CSU(PyMMCoreMicroscope):
     # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
     NAPARI_WIDGETS = ["Stage Map"]
 
+    # Brightness (0-255) that the "Lamp on" check box of the faro-napari dock
+    # sets when first ticked; later ticks restore the brightness at the last
+    # untick (100 is about 5.5 V on the halogen).
+    LAMP_ON_BRIGHTNESS = 120
+
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The halogen
     # is set to one brightness per experiment; BF and DIC differ by exposure
@@ -74,6 +80,7 @@ class IX83CSU(PyMMCoreMicroscope):
     NAPARI_CONTROLS = [
         "Light",
         (HALOGEN, "Brightness", "Halogen"),
+        PropertyToggle(HALOGEN, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
         "Spinning disk",
         ConfigGroupControl("CSU"),
         "Filters",

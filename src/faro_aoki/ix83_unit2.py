@@ -21,6 +21,7 @@ from pymmcore_plus.mda import MDAEngine
 from faro.microscope.pymmcore import (
     ConfigGroupControl,
     ContinuousFocusControl,
+    PropertyToggle,
     PyMMCoreMicroscope,
 )
 from faro_aoki._config import load_system_configuration
@@ -61,6 +62,11 @@ class IX83Unit2(PyMMCoreMicroscope):
     # (see PyMMCoreMicroscope.NAPARI_WIDGETS).
     NAPARI_WIDGETS = ["Stage Map"]
 
+    # Brightness (0-255) that the "Lamp on" check box of the faro-napari dock
+    # sets when first ticked; later ticks restore the brightness at the last
+    # untick (100 is about 5.5 V on the halogen).
+    LAMP_ON_BRIGHTNESS = 120
+
     # The "Illumination Control" dock of faro-napari, top to bottom (see
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
     # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no
@@ -77,6 +83,7 @@ class IX83Unit2(PyMMCoreMicroscope):
         ("Spectra", "Green_Level", "Green"),
         ("Spectra", "Red_Level", "Red"),
         (DIALAMP, "Brightness", "Halogen"),
+        PropertyToggle(DIALAMP, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
         "Transmitted path",
         ConfigGroupControl("Objective", "Obj+Condenser"),
         ("Condenser turret", "Label", "Condenser"),

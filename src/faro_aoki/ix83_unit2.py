@@ -13,6 +13,7 @@ read failed" on the second read.
 """
 
 import logging
+import time
 from importlib.resources import files
 
 import pymmcore_plus
@@ -45,12 +46,29 @@ class IX83Unit2MDAEngine(MDAEngine):
     ``sequenceAcquisitionStopped`` is what clears that timer.
     """
 
+    # Seconds to wait after the stage arrives at a new XY position, so the
+    # continuous ZDC can find focus before the first frame there. The MDA
+    # widget's hardware autofocus is hidden (HIDE_AUTOFOCUS), so nothing
+    # else waits for the ZDC.
+    AF_SETTLE_S = 0.2
+
     def setup_sequence(self, sequence):
         try:
             self.mmcore.stopSequenceAcquisition()
         except Exception:
             logger.exception("Failed to stop live acquisition before MDA")
         return super().setup_sequence(sequence)
+
+    def _set_event_xy_position(self, event):
+        # Upstream skips the move when the target did not change; wait only
+        # after a real move.
+        core = self.mmcore
+        last_xy = getattr(core, "_last_xy_position", {})
+        before = last_xy.get(None)
+        super()._set_event_xy_position(event)
+        if self.AF_SETTLE_S > 0 and last_xy.get(None) != before:
+            core.waitForDevice(core.getXYStageDevice())
+            time.sleep(self.AF_SETTLE_S)
 
 
 class IX83Unit2(PyMMCoreMicroscope):

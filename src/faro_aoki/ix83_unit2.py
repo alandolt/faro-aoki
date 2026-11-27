@@ -19,7 +19,6 @@ import pymmcore_plus
 from pymmcore_plus.mda import MDAEngine
 
 from faro.microscope.pymmcore import (
-    ConfigGroupControl,
     ContinuousFocusControl,
     PropertyToggle,
     PyMMCoreMicroscope,
@@ -71,9 +70,9 @@ class IX83Unit2(PyMMCoreMicroscope):
     # PyMMCoreMicroscope.NAPARI_CONTROLS for the entry types). The ZDC is the
     # "Autofocus" device (on/off: its ZDCEnabled property). The cfg has no
     # Core,AutoFocus line; Micro-Manager gives the core's autofocus role to
-    # that device when the cfg is loaded. The Objective group sets the
-    # objective with its matching condenser DIC prism; the Condenser control
-    # overrides the prism by hand. The Channel presets also set the polarizer.
+    # that device when the cfg is loaded. There is no Objective group: the
+    # objective and the condenser DIC prism are set one by one. The Channel
+    # presets also set the polarizer (2-In for Trans_DIC*, 1-Out for the rest).
     NAPARI_CONTROLS = [
         "Light",
         ("Spectra", "Violet_Level", "Violet (UV)"),
@@ -85,18 +84,21 @@ class IX83Unit2(PyMMCoreMicroscope):
         (DIALAMP, "Brightness", "Halogen"),
         PropertyToggle(DIALAMP, "Brightness", LAMP_ON_BRIGHTNESS, "Lamp on"),
         "Transmitted path",
-        ConfigGroupControl("Objective", "Obj+Condenser"),
+        ("Objective", "Label", "Objective"),
         ("Condenser turret", "Label", "Condenser"),
         ("Polarizer", "Label", "Polarizer"),
         "Filters",
         ("Dichroic 1", "Label", "Dichroic 1"),
         ("Dichroic 2", "Label", "Dichroic 2"),
-        ("Filter Wheel 1", "Label", "Filter wheel 1"),
-        ("Filter Wheel 2", "Label", "Filter wheel 2"),
+        ("Filter Wheel 1", "Label", "Excitation Filter Wheel"),
+        ("Filter Wheel 2", "Label", "Emission Filter Wheel"),
         "Camera",
         ("Camera-1", "Binning", "Binning"),
-        "Focus",
+        "Autofocus",
         ContinuousFocusControl("ZDC"),
+        ("Autofocus", "LowerLimit", "ZDC lower limit"),
+        ("Autofocus", "UpperLimit", "ZDC upper limit"),
+        ("AutofocusDrive", "Offset", "ZDC offset"),
     ]
     USE_AUTOFOCUS_EVENT = False
     USE_ONLY_PFS = False
